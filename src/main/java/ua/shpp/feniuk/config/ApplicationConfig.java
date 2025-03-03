@@ -21,9 +21,9 @@ public class ApplicationConfig {
     @Bean
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
-                .info(new Info().title("Мій API")
+                .info(new Info().title("API")
                         .version(appVersion)
-                        .description("Документація для API"));
+                        .description("Documentation for the API"));
     }
 
     @Bean
@@ -31,7 +31,8 @@ public class ApplicationConfig {
         return args -> {
             if (taskRepository.count() == 0) {
                 TaskEntity taskEntity = TaskEntity.builder()
-                        .description("First user")
+                        .title("string")
+                        .description("string")
                         .createdAt(LocalDate.now())
                         .status(Status.PLANNED)
                         .build();

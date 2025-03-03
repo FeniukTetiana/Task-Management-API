@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 import ua.shpp.feniuk.entity.TaskEntity;
 
 @Repository
-public interface TaskRepository extends JpaRepository<TaskEntity, Integer> {
+public interface TaskRepository extends JpaRepository<TaskEntity, Long> {
 }

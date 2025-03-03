@@ -1,5 +1,7 @@
 package ua.shpp.feniuk.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
@@ -10,13 +12,19 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @EqualsAndHashCode
+@Builder
 @ToString
+@NoArgsConstructor
 @AllArgsConstructor
 public class TaskDTO {
-    private Integer id;
+    @JsonIgnore
+    @Schema(hidden = true)
+    private Long id;
 
-    @NotBlank(message = "Description cannot be blank")
+    @NotBlank(message = "Title cannot be blank")
     @Column(nullable = false)
+    private String title;
+
     private String description;
 
     @NotBlank(message = "Data cannot be blank")
