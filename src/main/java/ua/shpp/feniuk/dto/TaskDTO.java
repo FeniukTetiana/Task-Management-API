@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import ua.shpp.feniuk.Status;
 
@@ -22,6 +23,7 @@ public class TaskDTO {
     private Long id;
 
     @NotBlank(message = "Title cannot be blank")
+    @Size(min = 5, max = 150)
     @Column(nullable = false)
     private String title;
 

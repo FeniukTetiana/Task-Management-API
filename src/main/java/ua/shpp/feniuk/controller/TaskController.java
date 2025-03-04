@@ -12,7 +12,6 @@ import ua.shpp.feniuk.entity.TaskEntity;
 import ua.shpp.feniuk.service.TaskService;
 
 import java.util.List;
-import java.util.Locale;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,8 +23,8 @@ public class TaskController {
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<TaskEntity> createTask(@RequestBody TaskDTO taskDTO, Locale locale) {
-        TaskEntity createdTask = taskService.createTask(taskDTO, locale);
+    public ResponseEntity<TaskEntity> createTask(@RequestBody TaskDTO taskDTO) {
+        TaskEntity createdTask = taskService.createTask(taskDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdTask);
     }
 
@@ -37,28 +36,26 @@ public class TaskController {
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
-    public ResponseEntity<TaskEntity> getTaskById(@PathVariable Long id, Locale locale) {
-        return ResponseEntity.ok(taskService.getTaskById(id, locale));
+    public ResponseEntity<TaskEntity> getTaskById(@PathVariable Long id) {
+        return ResponseEntity.ok(taskService.getTaskById(id));
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN')")
-    public ResponseEntity<TaskEntity> updateTask(@PathVariable Long id, @RequestBody TaskDTO taskDTO,
-                                                 Locale locale) {
-        return ResponseEntity.ok(taskService.updateTask(id, taskDTO, locale));
+    public ResponseEntity<TaskEntity> updateTask(@PathVariable Long id, @RequestBody TaskDTO taskDTO) {
+        return ResponseEntity.ok(taskService.updateTask(id, taskDTO));
     }
 
     @PatchMapping("/{id}")
     @PreAuthorize("hasAnyRole('USER')")
-    public ResponseEntity<TaskEntity> partiallyUpdateTask(@PathVariable Long id,
-                                                          @RequestBody TaskDTO taskDTO, Locale locale) {
-        return ResponseEntity.ok(taskService.partiallyUpdateTask(id, taskDTO, locale));
+    public ResponseEntity<TaskEntity> partiallyUpdateTask(@PathVariable Long id, @RequestBody TaskDTO taskDTO) {
+        return ResponseEntity.ok(taskService.partiallyUpdateTask(id, taskDTO));
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN')")
-    public ResponseEntity<String> deleteTask(@PathVariable Long id, Locale locale) {
-        taskService.deleteTask(id, locale);
-        return ResponseEntity.ok(taskService.getMessage("task.deleted", new Object[]{id}, locale));
+    public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
+        taskService.deleteTask(id);
+        return ResponseEntity.noContent().build();
     }
 }
