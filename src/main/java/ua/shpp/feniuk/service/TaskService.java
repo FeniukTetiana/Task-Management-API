@@ -23,14 +23,14 @@ public class TaskService {
     private final MessageSource messageSource;
     private final TaskMapper taskMapper;
 
-    public TaskEntity createTask(TaskDTO taskDTO) {
-        log.info(resolveMessage("task.created"));
-        return repository.save(taskMapper.toEntity(taskDTO));
-    }
-
     public List<TaskEntity> getAllTasks() {
         log.info(resolveMessage("task.fetching.all"));
         return repository.findAll();
+    }
+
+    public TaskEntity createTask(TaskDTO taskDTO) {
+        log.info(resolveMessage("task.created"));
+        return repository.save(taskMapper.toEntity(taskDTO));
     }
 
     public TaskEntity getTaskById(Long id) {
@@ -62,12 +62,15 @@ public class TaskService {
     }
 
     public void deleteTask(Long id) {
+        if (!repository.existsById(id)) {
+            throw new EntityNotFoundException("task.notFound", id);
+        }
         log.info(resolveMessage("task.deleted", id));
         repository.deleteById(id);
     }
 
     private void validateStatusTransition(Status currentStatus, Status newStatus) {
-        if (newStatus != null && !currentStatus.isTransitionValid(currentStatus, newStatus)) {
+        if (newStatus != null && !currentStatus.isTransitionValid(newStatus)) {
             throw new StatusValidationException(
                     "error.invalid.status.transition",
                     currentStatus,

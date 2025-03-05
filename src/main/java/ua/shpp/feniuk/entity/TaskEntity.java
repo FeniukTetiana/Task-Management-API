@@ -21,12 +21,15 @@ public class TaskEntity {
     @Column(nullable = false, updatable = false)
     private Long id;
 
+    @Column(nullable = false)
     private String title;
 
     private String description;
 
+    @Column(nullable = false)
     private LocalDate createdAt;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Status status;
 }
