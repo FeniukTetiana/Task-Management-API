@@ -4,9 +4,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
-import ua.shpp.feniuk.Status;
-
-import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -15,7 +12,7 @@ import java.time.LocalDate;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class TaskDTO {
+public class CreateTaskDTO {
     @Schema(hidden = true)
     private Long id;
 
@@ -24,8 +21,4 @@ public class TaskDTO {
     private String title;
 
     private String description;
-
-    private LocalDate createdAt;
-
-    private Status status;
 }

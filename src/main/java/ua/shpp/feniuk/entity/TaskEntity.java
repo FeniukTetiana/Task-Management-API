@@ -26,10 +26,18 @@ public class TaskEntity {
 
     private String description;
 
-    @Column(nullable = false)
+    @Column(nullable = false, updatable = false)
     private LocalDate createdAt;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Status status;
+
+    // Заповнюємо createdAt лише один раз перед збереженням в базу
+    @PrePersist
+    public void prePersist() {
+        if (createdAt == null) {
+            createdAt = LocalDate.now();
+        }
+    }
 }

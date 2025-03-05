@@ -7,12 +7,14 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 import ua.shpp.feniuk.Status;
 import ua.shpp.feniuk.TaskMapper;
+import ua.shpp.feniuk.dto.CreateTaskDTO;
 import ua.shpp.feniuk.dto.TaskDTO;
 import ua.shpp.feniuk.entity.TaskEntity;
 import ua.shpp.feniuk.exeptions.StatusValidationException;
 import ua.shpp.feniuk.exeptions.EntityNotFoundException;
 import ua.shpp.feniuk.repository.TaskRepository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -23,50 +25,64 @@ public class TaskService {
     private final MessageSource messageSource;
     private final TaskMapper taskMapper;
 
-    public List<TaskEntity> getAllTasks() {
+    public List<TaskDTO> getAllTasks() {
         log.info(resolveMessage("task.fetching.all"));
-        return repository.findAll();
+        List<TaskEntity> taskEntities = repository.findAll();
+
+        return taskEntities.stream().map(taskMapper::toDto).toList();
     }
 
-    public TaskEntity createTask(TaskDTO taskDTO) {
+    public TaskDTO createTask(CreateTaskDTO createTaskDTO) {
         log.info(resolveMessage("task.created"));
-        return repository.save(taskMapper.toEntity(taskDTO));
+        TaskEntity taskEntity = taskMapper.toEntity(createTaskDTO);
+
+        taskEntity.setCreatedAt(LocalDate.now());
+        taskEntity.setStatus(Status.PLANNED);
+
+        return taskMapper.toDtoForPOST(repository.save(taskEntity));
     }
 
-    public TaskEntity getTaskById(Long id) {
+    public TaskDTO getTaskById(Long id) {
         log.info(resolveMessage("task.found", id));
-        return repository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("task.notFound", id));
+        TaskEntity taskEntity = getTaskSpecifiedId(id);
+
+        return taskMapper.toDto(taskEntity);
     }
 
-    public TaskEntity updateTask(Long id, TaskDTO taskDTO) {
+
+    public TaskDTO updateTask(Long id, TaskDTO taskDTO) {
         log.info(resolveMessage("task.updated", id));
-        TaskEntity existingTask = getTaskById(id);
+        TaskEntity task = getTaskSpecifiedId(id);
 
-        validateStatusTransition(existingTask.getStatus(), taskDTO.getStatus());
+        validateStatusTransition(task.getStatus(), taskDTO.getStatus());
 
-        taskMapper.updateEntityFromDto(taskDTO, existingTask);
-        return repository.save(existingTask);
+        taskMapper.updateEntityFromDto(taskDTO, task);
+
+        return taskMapper.toDto(repository.save(task));
     }
 
-    public TaskEntity partiallyUpdateTask(Long id, TaskDTO taskDTO) {
+    public TaskDTO partiallyUpdateTask(Long id, TaskDTO taskDTO) {
         log.info(resolveMessage("task.partially.updated", id));
-        TaskEntity existingTask = getTaskById(id);
+        TaskEntity task = getTaskSpecifiedId(id);
 
-        if (taskDTO.getStatus() != null) {
-            validateStatusTransition(existingTask.getStatus(), taskDTO.getStatus());
-        }
+        validateStatusTransition(task.getStatus(), taskDTO.getStatus());
 
-        taskMapper.partialUpdateEntityFromDto(taskDTO, existingTask);
-        return repository.save(existingTask);
+        taskMapper.partialUpdateEntityFromDto(taskDTO, task);
+
+        return taskMapper.toDto(repository.save(task));
     }
 
     public void deleteTask(Long id) {
-        if (!repository.existsById(id)) {
-            throw new EntityNotFoundException("task.notFound", id);
-        }
         log.info(resolveMessage("task.deleted", id));
-        repository.deleteById(id);
+
+        TaskEntity task = getTaskSpecifiedId(id);
+
+        repository.delete(task);
+    }
+
+    private TaskEntity getTaskSpecifiedId(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("task.notFound", id));
     }
 
     private void validateStatusTransition(Status currentStatus, Status newStatus) {

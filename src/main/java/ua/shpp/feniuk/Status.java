@@ -1,5 +1,9 @@
 package ua.shpp.feniuk;
 
+import java.util.Collections;
+import java.util.Map;
+import java.util.Set;
+
 public enum Status {
     PLANNED,
     WORK_IN_PROGRESS,
@@ -9,37 +13,15 @@ public enum Status {
     DONE,
     CANCELLED;
 
-    // todo collection
+    private static final Map<Status, Set<Status>> VALID_TRANSITIONS = Map.of(
+            PLANNED, Set.of(WORK_IN_PROGRESS, POSTPONED, CANCELLED, PLANNED),
+            WORK_IN_PROGRESS, Set.of(NOTIFIED, SIGNED, POSTPONED, WORK_IN_PROGRESS, CANCELLED),
+            POSTPONED, Set.of(NOTIFIED, SIGNED, POSTPONED, WORK_IN_PROGRESS, CANCELLED),
+            NOTIFIED, Set.of(SIGNED, NOTIFIED, DONE, CANCELLED),
+            SIGNED, Set.of(SIGNED, NOTIFIED, DONE, CANCELLED)
+    );
+
     public boolean isTransitionValid(Status newStatus) {
-        return switch (this) {
-            case PLANNED ->
-                    newStatus == WORK_IN_PROGRESS ||
-                    newStatus == POSTPONED ||
-                    newStatus == Status.CANCELLED ||
-                    newStatus == Status.PLANNED;
-            case WORK_IN_PROGRESS ->
-                    newStatus == Status.NOTIFIED ||
-                    newStatus == Status.SIGNED ||
-                    newStatus == Status.POSTPONED  ||
-                    newStatus == Status.WORK_IN_PROGRESS ||
-                    newStatus == Status.CANCELLED;
-            case POSTPONED ->
-                    newStatus == Status.WORK_IN_PROGRESS ||
-                    newStatus == Status.POSTPONED ||
-                    newStatus == Status.NOTIFIED ||
-                    newStatus == Status.SIGNED ||
-                    newStatus == Status.CANCELLED;
-            case NOTIFIED ->
-                    newStatus == Status.SIGNED ||
-                    newStatus == Status.NOTIFIED ||
-                    newStatus == Status.DONE ||
-                    newStatus == Status.CANCELLED;
-            case SIGNED ->
-                    newStatus == Status.NOTIFIED ||
-                    newStatus == Status.SIGNED ||
-                    newStatus == Status.CANCELLED ||
-                    newStatus == Status.DONE;
-            default -> false;
-        };
+        return VALID_TRANSITIONS.getOrDefault(this, Collections.emptySet()).contains(newStatus);
     }
 }
