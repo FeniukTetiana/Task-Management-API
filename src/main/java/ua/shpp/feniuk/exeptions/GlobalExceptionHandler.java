@@ -17,20 +17,6 @@ import java.util.Locale;
 public class GlobalExceptionHandler {
     private final MessageSource messageSource;
 
-    private ResponseEntity<String> buildErrorResponse(BaseLocalizedException ex, HttpStatus status,
-                                                      String defaultMessage) {
-        Locale locale = LocaleContextHolder.getLocale();
-        String message = messageSource.getMessage(
-                ex.getMessageKey(),
-                ex.getArgs(),
-                defaultMessage,
-                locale
-        );
-
-        log.error("{}: {}", ex.getClass().getSimpleName(), message);
-        return ResponseEntity.status(status).body(message);
-    }
-
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<String> handleEntityNotFound(EntityNotFoundException ex) {
         return buildErrorResponse(ex, HttpStatus.NOT_FOUND, "task.notFound");
@@ -51,5 +37,19 @@ public class GlobalExceptionHandler {
                 locale
         );
         return ResponseEntity.badRequest().body(message);
+    }
+
+    private ResponseEntity<String> buildErrorResponse(BaseLocalizedException ex, HttpStatus status,
+                                                      String defaultMessage) {
+        Locale locale = LocaleContextHolder.getLocale();
+        String message = messageSource.getMessage(
+                ex.getMessageKey(),
+                ex.getArgs(),
+                defaultMessage,
+                locale
+        );
+
+        log.error("{}: {}", ex.getClass().getSimpleName(), message);
+        return ResponseEntity.status(status).body(message);
     }
 }

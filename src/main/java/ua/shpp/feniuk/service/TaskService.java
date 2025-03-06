@@ -25,15 +25,16 @@ public class TaskService {
     private final MessageSource messageSource;
     private final TaskMapper taskMapper;
 
+    // log i18n delete
     public List<TaskDTO> getAllTasks() {
-        log.info(resolveMessage("task.fetching.all"));
+        log.info(resolveMessage("Returns a list of all tasks"));
         List<TaskEntity> taskEntities = repository.findAll();
 
         return taskEntities.stream().map(taskMapper::toDto).toList();
     }
 
     public TaskDTO createTask(CreateTaskDTO createTaskDTO) {
-        log.info(resolveMessage("task.created"));
+        log.info(resolveMessage("Creates a new task with the given details."));
         TaskEntity taskEntity = taskMapper.toEntity(createTaskDTO);
 
         taskEntity.setCreatedAt(LocalDate.now());
@@ -43,7 +44,7 @@ public class TaskService {
     }
 
     public TaskDTO getTaskById(Long id) {
-        log.info(resolveMessage("task.found", id));
+        log.info(resolveMessage("Finds a task by its ID.", id));
         TaskEntity taskEntity = getTaskSpecifiedId(id);
 
         return taskMapper.toDto(taskEntity);
@@ -51,7 +52,7 @@ public class TaskService {
 
 
     public TaskDTO updateTask(Long id, TaskDTO taskDTO) {
-        log.info(resolveMessage("task.updated", id));
+        log.info(resolveMessage("Updates the entire task details", id));
         TaskEntity task = getTaskSpecifiedId(id);
 
         validateStatusTransition(task.getStatus(), taskDTO.getStatus());
@@ -62,7 +63,7 @@ public class TaskService {
     }
 
     public TaskDTO partiallyUpdateTask(Long id, TaskDTO taskDTO) {
-        log.info(resolveMessage("task.partially.updated", id));
+        log.info(resolveMessage("Updates only specified fields of the task", id));
         TaskEntity task = getTaskSpecifiedId(id);
 
         validateStatusTransition(task.getStatus(), taskDTO.getStatus());
@@ -73,7 +74,7 @@ public class TaskService {
     }
 
     public void deleteTask(Long id) {
-        log.info(resolveMessage("task.deleted", id));
+        log.info(resolveMessage("Removes a task by its ID", id));
 
         TaskEntity task = getTaskSpecifiedId(id);
 
