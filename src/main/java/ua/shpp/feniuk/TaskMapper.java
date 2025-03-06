@@ -15,18 +15,15 @@ public interface TaskMapper {
     @Mapping(target = "id", source = "id")
     TaskDTO toDto(TaskEntity entity);
 
-    @Mapping(target = "id", ignore = true)
     TaskEntity toEntity(CreateTaskDTO createTaskDTO);
 
     @Mapping(target = "id", source = "id")
     TaskDTO toDtoForPOST(TaskEntity taskEntity);
 
-    @Mapping(target = "id", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     void updateEntityFromDto(TaskDTO dto, @MappingTarget TaskEntity entity);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    @Mapping(target = "id", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     void partialUpdateEntityFromDto(TaskDTO dto, @MappingTarget TaskEntity entity);
 }

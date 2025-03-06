@@ -30,7 +30,7 @@ public class TaskController {
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @Operation(description = "task.get.all.description", responses = {
-            @ApiResponse(responseCode = "200", description = "task.list.received"),
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved list of tasks"),
             @ApiResponse(responseCode = "401", description = "Unauthorized - user not authenticated"),
             @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
