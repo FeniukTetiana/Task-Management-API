@@ -6,7 +6,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 import ua.shpp.feniuk.Status;
-import ua.shpp.feniuk.TaskMapper;
+import ua.shpp.feniuk.mapper.TaskMapper;
 import ua.shpp.feniuk.dto.CreateTaskDTO;
 import ua.shpp.feniuk.dto.TaskDTO;
 import ua.shpp.feniuk.entity.TaskEntity;
@@ -25,7 +25,6 @@ public class TaskService {
     private final MessageSource messageSource;
     private final TaskMapper taskMapper;
 
-    // log i18n delete
     public List<TaskDTO> getAllTasks() {
         log.info(resolveMessage("Returns a list of all tasks"));
         List<TaskEntity> taskEntities = repository.findAll();
@@ -34,7 +33,7 @@ public class TaskService {
     }
 
     public TaskDTO createTask(CreateTaskDTO createTaskDTO) {
-        log.info(resolveMessage("Creates a new task with the given details."));
+        log.info(resolveMessage("Creates a new task with the given details"));
         TaskEntity taskEntity = taskMapper.toEntity(createTaskDTO);
 
         taskEntity.setCreatedAt(LocalDate.now());
@@ -44,7 +43,7 @@ public class TaskService {
     }
 
     public TaskDTO getTaskById(Long id) {
-        log.info(resolveMessage("Finds a task by its ID.", id));
+        log.info(resolveMessage("Finds a task by its ID", id));
         TaskEntity taskEntity = getTaskSpecifiedId(id);
 
         return taskMapper.toDto(taskEntity);

@@ -20,7 +20,7 @@ import java.util.Locale;
 @RequiredArgsConstructor
 public class ApplicationConfig {
 
-    @Value("${application.version}")
+    @Value("${api.version}")
     private String appVersion;
 
     private final MessageSource messageSource;

@@ -1,4 +1,4 @@
-package ua.shpp.feniuk;
+package ua.shpp.feniuk.mapper;
 
 import org.mapstruct.*;
 import ua.shpp.feniuk.dto.CreateTaskDTO;

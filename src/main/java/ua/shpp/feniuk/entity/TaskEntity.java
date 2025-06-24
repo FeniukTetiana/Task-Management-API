@@ -33,7 +33,7 @@ public class TaskEntity {
     @Column(nullable = false)
     private Status status;
 
-    // Заповнюємо createdAt лише один раз перед збереженням в базу
+    // We fill in createdAt only once before saving to the database
     @PrePersist
     public void prePersist() {
         if (createdAt == null) {
