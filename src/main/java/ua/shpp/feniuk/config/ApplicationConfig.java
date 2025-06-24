@@ -19,7 +19,6 @@ import java.util.Locale;
 @Configuration
 @RequiredArgsConstructor
 public class ApplicationConfig {
-
     @Value("${api.version}")
     private String appVersion;
 
