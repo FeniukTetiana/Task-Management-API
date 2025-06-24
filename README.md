@@ -101,3 +101,8 @@ The API provides consistent error responses:
 - 403 Forbidden: If the authenticated user does not have the necessary permissions.
 - 404 Not Found: When a requested resource (e.g., task by ID) does not exist.
 - 500 Internal Server Error: For unexpected server errors.
+
+## License
+This project is intended for demonstration purposes in my portfolio only. All code is protected by copyright.
+
+You are free to view and clone the repository to review the code. However, you are not permitted to modify, distribute, or use this code or any part of it in any other project (commercial or non-commercial) without my explicit written consent.
